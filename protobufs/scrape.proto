@@ -1,0 +1,21 @@
+syntax = 'proto3';
+
+enum TokenType {
+    DOCUMENT = 0;
+    TAG = 1;
+    ATTRIBUTE = 2;
+}
+
+message ScrapeRequest {
+    TokenType type = 1;
+    string url = 2;
+}
+
+message ScrapeResponse {
+    TokenType type = 1;
+    repeated string tokens = 2;
+}
+
+service Scraper {
+    rpc Scrape (ScrapeRequest) returns (ScrapeResponse);
+}
