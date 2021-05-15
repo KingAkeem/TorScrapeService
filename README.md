@@ -1,2 +1,2 @@
 # ScrapeService
-A service that provides scraping functionality via gRPC protocol
+A service that provides web scraping functionality for Tor sites via gRPC protocol
