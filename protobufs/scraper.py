@@ -41,10 +41,10 @@ class ScraperService(scrape_pb2_grpc.ScraperServicer):
     async def Scrape(self, request, context):
         if not request.url or request.type == None:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, 'Missing required argument.');
-        try: 
+        try:
             links = await scrape(self.session, request.url, request.type)
         except Exception as err:
-            print('Unable handle request', err)
+            print('Unable to handle request.', err)
 
         return ScrapeResponse(tokens=links, type=request.type)
 
