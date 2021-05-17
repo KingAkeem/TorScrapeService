@@ -1,10 +1,5 @@
 # TorScrapeService
 A service that provides web scraping functionality for Tor sites via gRPC protocol
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 1c6e9a9caa26fdf12f8219b6531196aa4557ede1
 
 ### Compiling 
 In order to view changes made to the proto file, you'll need to compile the file using the command below:
