@@ -14,9 +14,8 @@ After compiling the proto file, you'll be able to start the server by running `p
 In order to connect a client you'll need to import the `grpc` package along with the client `protobufs`, an example is provided below:
 ```python3
 import grpc
-
-from scrape_pb2 improt ScrapeRequest, TokenType
 from scrape_pb2_grpc import ScraperStub
+from scrape_pb2 import ScrapeRequest, TokenType
 
 channel = grpc.insecure_channel('localhost:50051')
 client = ScraperStub(channel)
