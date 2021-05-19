@@ -1,3 +1,4 @@
+import os
 import grpc
 import asyncio
 import aiohttp
@@ -9,16 +10,16 @@ from aiohttp_socks import ProxyConnector
 import scrape_pb2_grpc
 from scrape_pb2 import ScrapeResponse, TokenType
 
-def create_tor_connector(settings={'host':'127.0.0.1','port': '9050'}):
-    host = settings['host'] if 'host' in settings else '127.0.0.1'
-    port = settings['port'] if 'port' in settings else '9050'
-    url = 'socks5://@{host}:{port}'.format(host=host, port=port)
+def create_tor_connector(settings):
+    url = 'socks5://@{host}:{port}'.format(host=settings['host'], port=settings['port'])
 
     if 'username' in settings or 'password' in settings:
         if 'username' not in settings or 'password' not in settings:
             raise Exception('Username and password required.')
         url = 'socks5://{username}:{password}@{host}:{port}'.format(
-            username=username, password=password, host=host, port=port)
+            username=settings['username'], password=settings['password'],
+            host=settings['host'], port=settings['port'])
+
     return ProxyConnector.from_url(url)
 
 
@@ -49,8 +50,17 @@ class ScraperService(scrape_pb2_grpc.ScraperServicer):
         return ScrapeResponse(tokens=links, type=request.type)
 
 async def serve():
-    connector = create_tor_connector();
+    port = os.getenv('SOCKS5_PORT', '9050')
+    host = os.getenv('SOCKS5_HOST', '127.0.0.1')
+    connector = create_tor_connector({
+        'host': host,
+        'port': port,
+        'username': os.getenv('SOCKS5_USERNAME', ''),
+        'password': os.getenv('SOCKS5_PASSWORD', '')
+    })
+    print("Attempting to connect to Tor on {host}:{port}".format(host=host, port=port))
     async with aiohttp.ClientSession(connector=connector) as session:
+        print('Tor connected.')
         server = aio.server()
         scrape_pb2_grpc.add_ScraperServicer_to_server(ScraperService(session), server)
         server.add_insecure_port("[::]:50051")
