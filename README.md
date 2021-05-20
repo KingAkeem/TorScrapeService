@@ -30,4 +30,4 @@ print(response.tokens)
 
 
 ### Here's an example of utilizing the service with the CLI
-
+![Testing Scrape CLI](https://user-images.githubusercontent.com/13573860/118857455-10bf8180-b8a6-11eb-83b6-7920e3785ecd.gif)
