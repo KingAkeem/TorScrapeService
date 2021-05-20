@@ -6,6 +6,17 @@ from bs4 import BeautifulSoup
 from scrape_pb2 import ScrapeRequest, TokenType
 from scrape_pb2_grpc import ScraperStub
 
+
+def printDocument(tokens):
+    document = tokens[0]
+    soup = BeautifulSoup(document, 'html.parser')
+    print(soup.prettify())
+
+def printTokens(tokens):
+    for index, token in enumerate(tokens):
+        print('{index}. {token}'.format(index=index+1, token=token))
+
+
 class ScraperClient: 
     def __init__(self, channel = grpc.insecure_channel('localhost:50051')):
         self.client = ScraperStub(channel)
@@ -24,13 +35,13 @@ def main():
     client = ScraperClient()
     tokens = client.scrape(args.url, args.type)
 
-    if TokenType.DOCUMENT == args.type:
-        document = tokens[0]
-        soup = BeautifulSoup(document, 'html.parser')
-        print(soup.prettify())
-    elif TokenType.TAG == args.type or TokenType.ATTRIBUTE == args.type:
-        for index, token in enumerate(tokens):
-            print('{index}. {token}'.format(index=index+1, token=token))
+    printers = {
+        TokenType.DOCUMENT: printDocument,
+        TokenType.TAG: printTokens,
+        TokenType.ATTRIBUTE: printTokens
+    }
+
+    printers[args.type](tokens)
 
 if __name__ == '__main__':
     main()
