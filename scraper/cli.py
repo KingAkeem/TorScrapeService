@@ -16,6 +16,11 @@ def print_tokens(tokens):
     for index, token in enumerate(tokens):
         print('{index}. {token}'.format(index=index+1, token=token))
 
+printers = {
+    TokenType.DOCUMENT: print_document,
+    TokenType.TAG: print_tokens,
+    TokenType.ATTRIBUTE: print_tokens
+}
 
 class ScraperClient: 
     def __init__(self, channel = grpc.insecure_channel('localhost:50051')):
@@ -34,13 +39,6 @@ def main():
 
     client = ScraperClient()
     tokens = client.scrape(args.url, args.type)
-
-    printers = {
-        TokenType.DOCUMENT: print_document,
-        TokenType.TAG: print_tokens,
-        TokenType.ATTRIBUTE: print_tokens
-    }
-
     printers[args.type](tokens)
 
 if __name__ == '__main__':
