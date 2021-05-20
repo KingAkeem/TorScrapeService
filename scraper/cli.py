@@ -7,12 +7,12 @@ from scrape_pb2 import ScrapeRequest, TokenType
 from scrape_pb2_grpc import ScraperStub
 
 
-def printDocument(tokens):
+def print_document(tokens):
     document = tokens[0]
     soup = BeautifulSoup(document, 'html.parser')
     print(soup.prettify())
 
-def printTokens(tokens):
+def print_tokens(tokens):
     for index, token in enumerate(tokens):
         print('{index}. {token}'.format(index=index+1, token=token))
 
@@ -36,9 +36,9 @@ def main():
     tokens = client.scrape(args.url, args.type)
 
     printers = {
-        TokenType.DOCUMENT: printDocument,
-        TokenType.TAG: printTokens,
-        TokenType.ATTRIBUTE: printTokens
+        TokenType.DOCUMENT: print_document,
+        TokenType.TAG: print_tokens,
+        TokenType.ATTRIBUTE: print_tokens
     }
 
     printers[args.type](tokens)
